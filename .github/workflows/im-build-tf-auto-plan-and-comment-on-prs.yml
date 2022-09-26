@@ -18,6 +18,9 @@ jobs:
   auto-plan-the-tf:
     runs-on: ubuntu-latest # Force this to run on github-hosted runner with a tag
     permissions: write-all
+    strategy:
+      matrix:
+        environment: [caring-dev]
 
     env:
       AWS_REGION: 'us-east-1'
