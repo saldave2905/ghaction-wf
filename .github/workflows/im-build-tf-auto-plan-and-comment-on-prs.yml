@@ -1,0 +1,39 @@
+# Workflow Code: TangoMango_v1    DO NOT REMOVE
+# Purpose:
+#    Automatically runs a terraform plan against the specified environments and
+#    comments on the PR with the expected changes when commits are pushed to a PR.
+#
+# Frequency:
+#    - This workflow should only be used once per repository
+
+
+name: Automatically run tf plan and comment on PR
+on:
+  pull_request:
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/**'
+
+jobs:
+  auto-plan-the-tf:
+    runs-on: ubuntu-latest # Force this to run on github-hosted runner with a tag
+    permissions: write-all
+    strategy:
+      matrix:
+        environment: [caring-dev]
+
+    env:
+      AWS_REGION: 'us-east-1'
+      TF_IN_AUTOMATION: 'true'
+      TF_VERSION: '0.15.4'
+      TF_WORKING_DIR: 'terraform/.'
+
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: '${{ env.TF_WORKING_DIR }}'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
